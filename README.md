@@ -1,6 +1,6 @@
-# Hotcake-Oven-API
+# Batman-API
 
-**Platform API** RESTful implementation for backend services of Hotcake-Oven.
+**Platform API** RESTful implementation for backend services of Batman-Game.
 
 API methods return JSON in response to HTTP requests.
 
@@ -17,28 +17,12 @@ $ pip3 install -r requirements.txt
 ### Authentication
 API Token is required to be included in header
 ```
-"X-JadoPado-API-Token": {API_Token}
+"batman-API-Token": {API_Token}
 ```
 
 ### Endpoints Available
 ```
-/v1/stores
-```
-
-### Stores Endpoint
-
-Action | HTTP request | Description
---- | --- | ---
-List all stores | `GET` /stores | Lists all stores with pagination.
-List a store | `GET` /stores/{store_id} | Filter and list store by id.
-
-####Example Response
-```
-{
-    "id": 0,
-    "name": "Store 1",
-    "city": "Colombo"
-}
+/v1/Queue
 ```
 
 ####Unit Tests
