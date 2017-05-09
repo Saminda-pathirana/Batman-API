@@ -109,4 +109,4 @@ api.add_resource(
 
 # Run server
 if __name__ == "__main__":
-    socketio.run(app, host= '192.168.1.231')
+    socketio.run(app, host= '0.0.0.0')

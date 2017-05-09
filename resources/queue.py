@@ -65,4 +65,7 @@ class Queue(Resource):
         db.session.commit()
 
         response = {'status': 'SUCCESS'}
+
+        socketio.emit('test', {'echo': 'Hello!'})
+
         return response
