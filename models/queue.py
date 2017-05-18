@@ -4,7 +4,7 @@ from common.mysqldb import db
 class queue(db.Model):
     __tablename__ = 'queue'
 
-    idqueue = db.Column(db.Integer, primary_key=True)
+    queue_id = db.Column(db.Integer, primary_key=True)
     device_id = db.Column(db.String(45))
     status = db.Column(db.String(45))
 

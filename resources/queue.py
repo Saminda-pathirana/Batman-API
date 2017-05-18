@@ -7,6 +7,10 @@ from models import queue
 
 from common.mysqldb import db
 
+from flask_socketio import SocketIO, emit
+
+from app import app, socketio
+
 # from docs.schemas.stores import GetStoreModel
 # from docs.responses.stores import get_store_response
 # from docs.parameters import page, records_per_page, store_id
@@ -50,6 +54,7 @@ class Queue(Resource):
         query = query.offset(args['offset']).limit(args['recordsPerPage'])
         response = query.all()
 
+        socketio.emit('test', {'data': 'got it!'})
         return response
 
     def post(self):
@@ -65,7 +70,4 @@ class Queue(Resource):
         db.session.commit()
 
         response = {'status': 'SUCCESS'}
-
-        socketio.emit('test', {'echo': 'Hello!'})
-
         return response

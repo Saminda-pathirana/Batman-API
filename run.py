@@ -5,7 +5,7 @@ from redis import Redis, RedisError, StrictRedis
 from flask_cache import Cache
 import jwt
 import sys
-from flask.ext.socketio import SocketIO
+from flask_socketio import SocketIO
 
 # from flask_swagger import swagger
 from flask_restful_swagger_2 import Api
@@ -19,6 +19,7 @@ from resources.queue import Queue
 #: Import mysqlAlchemy instance
 from common.mysqldb import db
 
+from app import app, socketio
 
 class RedisHandler(logging.Handler):
     """Redis handler for logging"""
@@ -48,8 +49,8 @@ class RedisHandler(logging.Handler):
         except RedisError:
             pass
 
-app = Flask(__name__)
-socketio = SocketIO(app)
+# app = Flask(__name__)
+# socketio = SocketIO(app)
 app.config.from_object('config')
 db.init_app(app)
 
@@ -73,26 +74,27 @@ def before_request():
     api_token = request_header('batman-API-Token')
     locale = request_header('batman-Locale') or 'en'
     if api_token:
-        try:
-            payload = jwt.decode(api_token, app.config['JWT_SECRET'])
-            if not g.user:
-                g.user = {}
-            if not payload:
-                abort(403, message="Invalid or expired token")
-            # g.user['uid'] = payload['userId'] if 'userId' in payload else None
-            # g.user['kid'] = payload['kid'] if 'kid' in payload else None
-            # g.buyer_id = payload['userId'] if 'userId' in payload else None
-            # g.token_id = payload['kid'] if 'kid' in payload else None
-            # g.device_id = payload['device'] if 'device' in payload else ''
-            # g.app_id = payload['app'] if 'app' in payload else ''
-            # g.store_uuid = payload['sid'] if 'sid' in payload else None
-        except jwt.ExpiredSignatureError:
-            if request.endpoint != 'authtoken':
-                abort(403, message="Invalid or expired token")
-        except ValueError:
-            print(ValueError)
-            print("Unexpected error:", sys.exc_info()[0])
-            abort(403, message="Invalid or expired token")
+        print "revieved"
+        # try:
+        #     payload = jwt.decode(api_token, app.config['JWT_SECRET'])
+        #     if not g.user:
+        #         g.user = {}
+        #     if not payload:
+        #         abort(403, message="Invalid or expired token")
+        #     # g.user['uid'] = payload['userId'] if 'userId' in payload else None
+        #     # g.user['kid'] = payload['kid'] if 'kid' in payload else None
+        #     # g.buyer_id = payload['userId'] if 'userId' in payload else None
+        #     # g.token_id = payload['kid'] if 'kid' in payload else None
+        #     # g.device_id = payload['device'] if 'device' in payload else ''
+        #     # g.app_id = payload['app'] if 'app' in payload else ''
+        #     # g.store_uuid = payload['sid'] if 'sid' in payload else None
+        # except jwt.ExpiredSignatureError:
+        #     if request.endpoint != 'authtoken':
+        #         abort(403, message="Invalid or expired token")
+        # except ValueError:
+        #     print(ValueError)
+        #     print("Unexpected error:", sys.exc_info()[0])
+        #     abort(403, message="Invalid or expired token")
     elif request.endpoint != 'authtoken':
         abort(403, message="Invalid or expired token")
     #validate_access_by_endpoint()
@@ -104,9 +106,17 @@ api.add_resource(
     '/queue'
 )
 
+@socketio.on('connect')
+def connect_handler():
+    print 'message was received!'
+
+
+@socketio.on('test2')
+def handle_message(message):
+    print('received message: ' + message)
 
 # @app.route("/spec")
 
 # Run server
 if __name__ == "__main__":
-    socketio.run(app, host= '0.0.0.0')
+    socketio.run(app, host= '192.168.1.231')
